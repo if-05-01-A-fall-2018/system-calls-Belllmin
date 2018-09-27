@@ -1,0 +1,171 @@
+fork
+
+  - create a child process
+  - fork()  creates a new process by duplicating the calling process.  The new process is referred to as the child process.  The calling
+    process is referred to as the parent process.
+  - The child process and the parent process run in separate memory spaces.  At the time of fork() both memory spaces have the same content.
+
+  -> Arguments: void
+
+stat
+
+  - display file or file system status
+  - The "status" in this case constitutes what we currently call metadata: information about the file,
+    like ownership, permissions, sizes, access, modification and status change times, things like that.
+
+  -> Arguments: const char *path, struct stat *buf
+
+kill
+
+  - send a signal to a process
+  - The  default  signal for kill is TERM.  Use -l or -L to list available signals.  Particularly useful signals include HUP, INT, KILL,
+    STOP, CONT, and 0.  Alternate signals may be specified in three ways: -9, -SIGKILL or -KILL.  Negative PID values  may  be  used  to
+    choose  whole  process  groups; see the PGID column in ps command output.  A PID of -1 is special; it indicates all processes except
+    the kill process itself and init.
+
+  -> Arguments: One or more Prozess-IDs - pid
+
+mmap
+
+  - mmap, munmap - map or unmap files or devices into memory
+  - mmap() creates a new mapping in the virtual address space of the calling process.  The starting address for the new mapping is spec‐
+    ified in addr.  The length argument specifies the length of the mapping.
+
+  -> Arguments: void *addr, size_t length, int prot, int flags, int fd, off_t offset
+
+chmod
+
+  - change file mode bits
+  - This  manual  page documents the GNU version of chmod.  chmod changes the file mode bits of each given file according to mode, which
+    can be either a symbolic representation of changes to make, or an octal number representing the bit pattern for the new mode bits.
+
+  -> Arguments: const char *path, mode_t mode
+
+waitpid
+
+  - wait for process to change state
+  - All of these system  calls are used to wait for state changes in a child of the calling process, and obtain information about the
+    child whose state has changed.  A state change is considered to be: the child terminated; the child was stopped by a signal; or  the
+    child  was  resumed  by  a  signal.
+
+  -> Arguments: pid_t pid, int *wstatus, int options
+
+======================================================================================================================================================================================================
+
+A condition that causes fork to fail: The Fork() will fail and no child process will be created if:
+
+                                      [EAGAIN]           The system-imposed limit on the total number of pro-
+                                                         cesses under execution would be exceeded.  This limit
+                                                         is configuration-dependent.
+
+                                      [EAGAIN]           The system-imposed limit MAXUPRC (<sys/param.h>) on the
+                                                         total number of processes under execution by a single
+                                                         user would be exceeded.
+
+                                      [ENOMEM]           There is insufficient swap space for the new process.
+
+
+A condition that causes exec to fail: The Execve() will fail and return to the calling process if:
+
+                                      [E2BIG] - The number of bytes in the new process's argument list is larger than the system-imposed limit.
+                                                This limit is specified by the sysctl(3) MIB variable KERN_ARGMAX.
+                                      [EACCES] - Search permission is denied for a component of the path prefix.
+                                      [EACCES] - The new process file is not an ordinary file.
+                                      [EACCES] - The new process file mode denies execute permission.
+                                      [EACCES] - The new process file is on a filesystem mounted with execution disabled (MNT_NOEXEC in <sys/mount.h>).
+                                      [EFAULT] - The new process file is not as long as indicated by the size values in its header.
+                                      [EFAULT] - Path, argv, or envp point to an illegal address.
+                                      [EIO] - An I/O error occurred while reading from the file system.
+                                      [ELOOP] - Too many symbolic links were encountered in translating the pathname. This is taken to be indicative
+                                                of a looping symbolic link.
+                                      [ENAMETOOLONG] - A component of a pathname exceeded {NAME_MAX} characters, or an entire path name exceeded
+                                                {PATH_MAX} characters.
+                                      [ENOENT] - The new process file does not exist.
+                                      [ENOEXEC] - The new process file has the appropriate access permission, but has an unrecognized format
+                                                  (e.g., an invalid magic number in its header).
+                                      [ENOMEM] - The new process requires more virtual memory than is allowed by the imposed maximum (getrlimit(2)).
+                                      [ENOTDIR] - A component of the path prefix is not a directory.
+                                      [ETXTBSY] - The new process file is a pure procedure (shared text) file that is currently open for writing or
+                                                  reading by some process.
+
+
+A condition that causes unlink to fail: The unlink() function shall fail and shall not unlink the file if:
+
+                                        [EACCES] - Search permission is denied for a component of the path prefix, or write permission is
+                                                   denied on the directory  containing the directory entry to be removed.
+                                        [EBUSY] - The file named by the path argument cannot be unlinked because it is being used by the
+                                                  system or another process and the implementation considers this an error.
+                                        [ELOOP] - A loop exists in symbolic links encountered during resolution of the path argument.
+                                        [ENAMETOOLONG] - The length of the path argument exceeds {PATH_MAX} or a pathname component is
+                                                         longer than {NAME_MAX}.
+                                        [ENOENT] - A component of path does not name an existing file or path is an empty string.
+                                        [ENOTDIR] - A component of the path prefix is not a directory.
+                                        [EPERM] - The file named by path is a directory, and either the calling process does not have appropriate
+                                                  privileges, or the implementation prohibits using unlink() on directories.
+                                        [EPERM] or [EACCES]
+                                        [XSI] [Option Start] - The S_ISVTX flag is set on the directory containing the file referred to by the
+                                                               path argument and the caller is not the file owner, nor is the caller the directory owner,
+                                                               nor does the caller have appropriate privileges. [Option End]
+                                        [EROFS] - The directory entry to be unlinked is part of a read-only file system.
+
+
+                                        The unlink() function may fail and not unlink the file if:
+
+                                        [EBUSY]
+                                        [XSI] [Option Start] - The file named by path is a named STREAM. [Option End]
+                                        [ELOOP] - More than {SYMLOOP_MAX} symbolic links were encountered during resolution of the path argument.
+                                        [ENAMETOOLONG] - As a result of encountering a symbolic link in resolution of the path argument, the length
+                                                         of the substituted pathname string exceeded {PATH_MAX}.
+                                        [ETXTBSY] - The entry to be unlinked is the last directory entry to a pure procedure (shared text) file that is being executed.
+
+
+A condition that causes read to fail: The read() function will fail if:
+
+                                      file doesn't exist
+                                      no permission
+
+
+A condition that causes mount to fail: The mount() function will fail if:
+
+                                       path is wrong
+                                       path is corrupted
+
+
+A condition that causes chmod to fail: The chmod() function shall fail if:
+
+                                       EACCES - Search permission is denied on a component of the path prefix.
+                                       ELOOP - A loop exists in symbolic links encountered during resolution
+                                               of the path argument.
+                                       ENAMETOOLONG - The length of the path argument exceeds {PATH_MAX} or a pathname component is longer than {NAME_MAX}.
+                                       ENOTDIR - A component of the path prefix is not a directory.
+                                       ENOENT - A component of path does not name an existing file or path is an empty string.
+                                       EPERM - The effective user ID does not match the owner of the file and the process does not have appropriate privileges.
+                                       EROFS - The named file resides on a read-only file system.
+
+                                       The chmod() function may fail if:
+
+                                       EINTR - A signal was caught during execution of the function.
+                                       EINVAL - The value of the mode argument is invalid.
+                                       ELOOP - More than {SYMLOOP_MAX} symbolic links were encountered during resolution of the path argument.
+                                       ENAMETOOLONG - As a result of encountering a symbolic link in resolution of the path argument, the length of the substituted
+                                                      pathname strings exceeded {PATH_MAX}.
+
+
+A condition that causes kill to fail: The kill() function shall fail if:
+
+                                      EINVAL - The value of the sig argument is an invalid or unsupported signal number.
+                                      EPERM - The process does not have permission to send the signal to any receiving process.
+                                      ESRCH - No process or process group can be found corresponding to that specified by pid.
+
+
+=======================================================================================================================================================================================================
+
+Trap instruction: A trap instruction is a procedure call that synchronously transfers the control. It is a software interrupt generated by the user
+                  program or by an error when the operating system is needed by it to perform the system calls or an operation
+
+                  Its used to switch from the user mode to the system to the kernel mode.
+
+Trap instruction in operating systems: A trap is an exception in a user process. It's caused by division by zero or invalid memory access.
+                                       It's also the usual way to invoke a kernel routine (a system call) because those run with a higher priority than user code.
+                                       Handling is synchronous (so the user code is suspended and continues afterwards). In a sense they are "active" - most of the time,
+                                       the code expects the trap to happen and relies on this fact.
